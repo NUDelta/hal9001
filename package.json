@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "nodemon -r dotenv/config ./bin/www",
+    "dev": "concurrently \"nodemon -r dotenv/config ./bin/www\" \"lt --port 3001 --subdomain hal9001tester\"",
     "test": "mocha"
   },
   "dependencies": {
@@ -39,7 +39,9 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "concurrently": "^4.0.1",
     "dotenv": "^6.1.0",
+    "localtunnel": "^1.9.1",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.4"
   }
