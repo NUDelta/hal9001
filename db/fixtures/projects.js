@@ -32,4 +32,26 @@ module.exports = [
       project_name: 'Collective Experience API'
     }
   },
+  {
+    name: 'Affinder',
+    description: 'Affordances + Finder = Affinder.',
+    students: ['Ryan Louie'],
+    sig: {
+      name: 'Breaking Boundaries'
+    },
+    sprints: {
+      project_name: 'Collective Experience API'
+    }
+  },
+  {
+    name: 'Supply Management',
+    description: 'Community-adjustable task completion policies.',
+    students: ['Yongsung Kim'],
+    sig: {
+      name: 'On-the-Go Crowdsourcing'
+    },
+    sprints: {
+      project_name: 'Collective Experience API'
+    }
+  },
 ];

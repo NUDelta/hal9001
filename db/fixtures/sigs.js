@@ -6,7 +6,9 @@ module.exports = [
       day: 'monday',
       start_time: '12:00',
       end_time: '12:30'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Kapil Garg'
   },
   {
     name: 'Collective Experiences',
@@ -15,7 +17,9 @@ module.exports = [
       day: 'monday',
       start_time: '13:00',
       end_time: '14:00'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Ryan Louie'
   },
   {
     name: 'On-the-Go Crowdsourcing',
@@ -24,7 +28,9 @@ module.exports = [
       day: 'tuesday',
       start_time: '13:00',
       end_time: '14:00'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Yongsung Kim'
   },
   {
     name: 'BBQ',
@@ -33,7 +39,9 @@ module.exports = [
       day: 'monday',
       start_time: '15:00',
       end_time: '16:00'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Haoqi Zhang'
   },
   {
     name: 'Readily Available Learning Experiences',
@@ -42,7 +50,9 @@ module.exports = [
       day: 'monday',
       start_time: '14:00',
       end_time: '15:00'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Gobi Dasu'
   },
   {
     name: 'Agile Research Studios',
@@ -51,6 +61,8 @@ module.exports = [
       day: 'wednesday',
       start_time: '15:00',
       end_time: '16:00'
-    }
+    },
+    faculty_mentor: 'Haoqi Zhang',
+    sig_head: 'Leesha Maliakal'
   },
 ];

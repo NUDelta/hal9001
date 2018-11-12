@@ -11,7 +11,9 @@ let SIGSchema = new Schema({
       end_time: String
     }],
     required: true
-  }
+  },
+  faculty_mentor: { type: String, required: true },
+  sig_head: { type: String, required: true },
 });
 
 module.exports = mongoose.model('SIG', SIGSchema);

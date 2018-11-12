@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<%- include ../layout/head.ejs %>
+<body>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Create an Orchestration Script</h1>
+
+        <div id="sign-in">
+            <form class="form-goal" id="goal-form" action="/os/create" title="" method="post">
+                <!-- Goal -->
+                <label for="goal">Orchestration Script Goal</label>
+                <input id="goal" type="text" name="goal_field" class="form-control" value="" required>
+                <br>
+
+                <!-- Conditions -->
+                <label for="condition">Select Condition </label>
+                <select id="condition" name="condition_field" class="form-control">
+                    <%
+                    for ( var i = 0; i < conditions.length; i++ ) {
+                        var selected = "";
+                    %><option value="<%=conditions[i] %>" <%=selected %>><%=conditions[i] %></option><%
+                    }
+                    %>
+                </select>
+                <br>
+
+                <!-- Actionable Feedback -->
+                <label for="feedback">Select Actionable Feedback to Present </label>
+                <select id="feedback" name="feedback_field" class="form-control">
+                    <%
+                    for ( var i = 0; i < feedback.length; i++ ) {
+                        var selected = "";
+                    %><option value="<%=feedback[i] %>" <%=selected %>><%=feedback[i] %></option><%
+                    }
+                    %>
+                </select>
+                <br>
+
+                <!-- Escalation Protocol -->
+                <label for="escalation">Select Escalation Strategy </label>
+                <select id="escalation" name="escalation_field" class="form-control">
+                    <%
+                    for ( var i = 0; i < escalation.length; i++ ) {
+                        var selected = "";
+                    %><option value="<%=escalation[i] %>" <%=selected %>><%=escalation[i] %></option><%
+                    }
+                    %>
+                </select>
+                <br>
+
+                <!-- Relevant Projects -->
+                <label>Select Projects to Monitor Condition On</label> <br>
+                <%
+                for ( var i = 0; i < projects.length; i++ ) {
+                  var name = "project" + i;
+                %><input type="checkbox" name=<%=name %> value="<%=projects[i] %>" checked> <%=projects[i] %><br><%
+                }
+                %>
+                <br>
+
+                <!-- Submit -->
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value=" Send">Create Script</button>
+
+                <!-- Success Message -->
+                <%if (saved) { %>
+                    <br>
+                    <span class="" id="signin-error">Orchestration Script Successfully Saved.</span>
+                <% } %>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

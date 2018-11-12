@@ -43,7 +43,9 @@ const initDb = function initializeDbFromFixtures() {
           let newSig = new SIG({
             name: currFixture.name,
             description: currFixture.description,
-            meeting_time: currFixture.meeting_time
+            meeting_time: currFixture.meeting_time,
+            faculty_mentor: currFixture.faculty_mentor,
+            sig_head: currFixture.sig_head
           });
 
           sigsToAdd.push(newSig.save());

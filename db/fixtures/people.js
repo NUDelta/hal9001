@@ -64,6 +64,38 @@ module.exports = [
     ]
   },
   {
+    first_name: 'Gobi',
+    last_name: 'Dasu',
+    slack_id: 'U0G17CVCZ',
+    slack_name: 'kapil',
+    slack_team_name: 'DTR',
+    slack_team_id: 'T0CEQEN0L',
+    role: 'phd student',
+    office_hours: [
+      {
+        day: 'friday',
+        start_time: '10:00',
+        end_time: '12:00'
+      }
+    ]
+  },
+  {
+    first_name: 'Leesha',
+    last_name: 'Maliakal',
+    slack_id: 'U0G17CVCZ',
+    slack_name: 'kapil',
+    slack_team_name: 'DTR',
+    slack_team_id: 'T0CEQEN0L',
+    role: 'phd student',
+    office_hours: [
+      {
+        day: 'friday',
+        start_time: '10:00',
+        end_time: '12:00'
+      }
+    ]
+  },
+  {
     first_name: 'Andrew',
     last_name: 'Finke',
     slack_id: 'U0G17CVCZ',
