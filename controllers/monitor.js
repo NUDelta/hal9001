@@ -32,13 +32,12 @@ const presentActionableFeedback = function presentActionableFeedbackBasedOnScrip
     if (osName.toLowerCase().includes('urg')) {
       feedbackMessage = `Hey [person]! Looks like you're working on your URG. Take a look at the process guide before you start: ${resources['urg']}`;
     } else if (osName.toLowerCase().includes('study design')) {
-      // get students to send chat to
       feedbackMessage = `Hey [person]! Looks like you're working on a study design. Take a look at the study design learning module before you start: ${resources['study design']}`;
     }
   } else if (feedback === 'prompt student schedule meeting with SIG head') {
     feedbackMessage = `Hey [person]! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
   } else if (feedback === 'prompt student to reflect on issue') {
-    feedbackMessage = `Hey [person]! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
+    feedbackMessage = `Hey [person]! Have you made progress on your issue (${ issueName })? Do you have any blockers to completing it?`;
   } else if (feedback === 'remind mentor to discuss issue at SIG meeting') {
     target = 'mentor';
     feedbackMessage = `Hey [person]! Remember to discuss ${ projectName }'s issue during SIG.`;
