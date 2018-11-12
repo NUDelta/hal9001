@@ -13,7 +13,7 @@ const checkIfConditionsMet = function checkIfAnyConditionsMetFromNewIssue() {
 
 const triggerOrchestrationScript = function triggerOrchestrationScript(issueId) {
   // fetch issue with orchestration data
-  let currentIssue = Issues.findOne({'_id': issueId})
+  Issues.findOne({'_id': issueId})
     .populate('os_triggered')
     .populate('project')
     .exec()
@@ -30,27 +30,29 @@ const presentActionableFeedback = function presentActionableFeedbackBasedOnScrip
 
   if (feedback === 'direct student to resource') {
     if (osName.toLowerCase().includes('urg')) {
-      feedbackMessage = `Hey! Looks like you're working on your URG. Take a look at the process guide before you start: ${resources['urg']}`;
+      feedbackMessage = `Hey [person]! Looks like you're working on your URG. Take a look at the process guide before you start: ${resources['urg']}`;
     } else if (osName.toLowerCase().includes('study design')) {
       // get students to send chat to
-      feedbackMessage = `Hey! Looks like you're working on a study design. Take a look at the study design learning module before you start: ${resources['study design']}`;
+      feedbackMessage = `Hey [person]! Looks like you're working on a study design. Take a look at the study design learning module before you start: ${resources['study design']}`;
     }
   } else if (feedback === 'prompt student schedule meeting with SIG head') {
-    feedbackMessage = `Hey! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
+    feedbackMessage = `Hey [person]! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
   } else if (feedback === 'prompt student to reflect on issue') {
-    feedbackMessage = `Hey! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
+    feedbackMessage = `Hey [person]! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
   } else if (feedback === 'remind mentor to discuss issue at SIG meeting') {
     target = 'mentor';
-    feedbackMessage = `Hey! Remember to discuss ${ projectName }'s issue during SIG.`;
+    feedbackMessage = `Hey [person]! Remember to discuss ${ projectName }'s issue during SIG.`;
   }
 
   // send message
   if (target === 'student') {
     People.find({ _id: students })
       .then((studentObjs) => {
+        console.log(studentObjs);
         _.forEach(studentObjs, studentObj => {
+          let feedbackMessageWithNames = feedbackMessage.replace('[person]', studentObj.first_name);
           bot.sendPrivateMessageToUser(studentObj.slack_team_name,
-            studentObj.slack_id, feedbackMessage);
+            studentObj.slack_id, feedbackMessageWithNames);
         });
       })
       .catch((err) => {
@@ -66,6 +68,7 @@ const presentActionableFeedback = function presentActionableFeedbackBasedOnScrip
       })
       .then(obj => {
         if (obj) {
+          feedbackMessage = feedbackMessage.replace('[person]', obj.first_name);
           bot.sendPrivateMessageToUser(obj.slack_team_name,
             obj.slack_id, feedbackMessage);
         }
