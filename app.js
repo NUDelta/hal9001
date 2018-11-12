@@ -12,6 +12,7 @@ const logger = require('morgan');
 const createError = require('http-errors');
 
 const mongoose = require('mongoose');
+const initDb  = require('./db/init');
 
 
 /**
@@ -34,6 +35,10 @@ const poolSize = process.env.POOL_SIZE || 25;
 
 mongoose.Promise = global.Promise;
 mongoose.connect(mongoURI, { poolSize: poolSize, useNewUrlParser: true })
+  .then(() => {
+    // initialize DB from fixtures
+    initDb();
+  })
   .catch((err) => {
     console.error(`Error in connecting to DB: ${err}`);
   });

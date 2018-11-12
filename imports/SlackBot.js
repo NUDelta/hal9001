@@ -104,6 +104,7 @@ class SlackBot {
   sendPrivateMessageToUser(teamName, userId, message) {
     // get bot to use to send message
     this.controller.storage.teams.all((err, all_team_data) => {
+      console.log(all_team_data)
       let teamBotToken = '';
       for (let team of all_team_data) {
         if (team.name.toLowerCase().trim() === teamName.toLowerCase().trim()) {
@@ -129,6 +130,12 @@ class SlackBot {
         }
       });
     });
+  }
+
+  getAllUsersForTeam(teamName) {
+    this.controller.storage.users.all((err, all_users) => {
+      console.log(all_users)
+    })
   }
 }
 
