@@ -9,4 +9,4 @@ let ProjectSchema = new Schema({
   sprints: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sprint' }]
 });
 
-module.exports = mongoose.model('Projects', ProjectSchema);
+module.exports = mongoose.model('Project', ProjectSchema);

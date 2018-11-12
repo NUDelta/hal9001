@@ -20,6 +20,7 @@ const initDb  = require('./db/init');
  */
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const issuesRouter = require('./routes/issues');
 
 /**
  * Custom imports
@@ -71,6 +72,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/issues', issuesRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
