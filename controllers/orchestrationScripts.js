@@ -21,8 +21,9 @@ const availableEscalationProtocols = [
   'prompt student to schedule meeting with faculty'
 ];
 
-const createOrchestrationScript = function createNewOrchestrationScript(goal, condition, feedback, escalation, projects) {
+const createOrchestrationScript = function createNewOrchestrationScript(name, goal, condition, feedback, escalation, projects) {
   let newOS = new OrchestrationScript({
+    name: name,
     goal: goal,
     condition: condition,
     actionable_feedback: feedback,

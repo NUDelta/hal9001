@@ -39,8 +39,8 @@ router.post('/os/create', function (req, res, next) {
 
   // save to database
 
-  os.createOrchestrationScript(formBody.goal_field, formBody.condition_field,
-    formBody.feedback_field, formBody.escalation_field , projects)
+  os.createOrchestrationScript(formBody.name_field, formBody.goal_field, formBody.condition_field,
+    formBody.feedback_field, formBody.escalation_field, projects)
     .then(() => {
       res.redirect('/os/?saved=' + encodeURIComponent('true'));
     })

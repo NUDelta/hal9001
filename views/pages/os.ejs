@@ -9,12 +9,17 @@
         <div id="sign-in">
             <form class="form-goal" id="goal-form" action="/os/create" title="" method="post">
                 <!-- Goal -->
-                <label for="goal">Orchestration Script Goal</label>
+                <label for="name">Enter a short name for this script</label>
+                <input id="name" type="text" name="name_field" class="form-control" value="" required>
+                <br>
+
+                <!-- Goal -->
+                <label for="goal">What is the goal of this script?</label>
                 <input id="goal" type="text" name="goal_field" class="form-control" value="" required>
                 <br>
 
                 <!-- Conditions -->
-                <label for="condition">Select Condition </label>
+                <label for="condition">What condition should trigger this script?</label>
                 <select id="condition" name="condition_field" class="form-control">
                     <%
                     for ( var i = 0; i < conditions.length; i++ ) {
@@ -26,7 +31,7 @@
                 <br>
 
                 <!-- Actionable Feedback -->
-                <label for="feedback">Select Actionable Feedback to Present </label>
+                <label for="feedback">What actionable feedback should be presented to the project team when this script is triggered?</label>
                 <select id="feedback" name="feedback_field" class="form-control">
                     <%
                     for ( var i = 0; i < feedback.length; i++ ) {
@@ -38,7 +43,7 @@
                 <br>
 
                 <!-- Escalation Protocol -->
-                <label for="escalation">Select Escalation Strategy </label>
+                <label for="escalation">How should the script escalate the issue if it goes unaddressed?</label>
                 <select id="escalation" name="escalation_field" class="form-control">
                     <%
                     for ( var i = 0; i < escalation.length; i++ ) {
@@ -50,7 +55,7 @@
                 <br>
 
                 <!-- Relevant Projects -->
-                <label>Select Projects to Monitor Condition On</label> <br>
+                <label>What projects should this script be run on?</label> <br>
                 <%
                 for ( var i = 0; i < projects.length; i++ ) {
                   var name = "project" + i;
