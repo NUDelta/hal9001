@@ -16,7 +16,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "concurrently \"nodemon -r dotenv/config ./bin/www\" \"lt --port 3001 --subdomain hal9001tester\" \"mongod\"",
-    "test": "mocha"
+    "test": "mocha",
+    "lines": "cloc --exclude-dir=node_modules,.idea --exclude-ext=json ."
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -42,6 +43,7 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "cloc": "^2.3.4",
     "concurrently": "^4.0.1",
     "dotenv": "^6.1.0",
     "localtunnel": "^1.9.1",
