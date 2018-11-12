@@ -1,45 +1,50 @@
-const createError = require('http-errors');
-const express = require('express');
+/**
+ * Application Imports
+ */
 const path = require('path');
-const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const express = require('express');
 const sassMiddleware = require('node-sass-middleware');
-const bodyParser = require('body-parser');
 
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
+const logger = require('morgan');
+const createError = require('http-errors');
+
+const mongoose = require('mongoose');
+
+
+/**
+ * Route imports
+ */
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 /**
- * Setup Bot
+ * Custom imports
  */
 const SlackBot = require('./imports/SlackBot');
 
-const slackBotConfig = {
-  json_file_store: ((process.env.TOKEN)?'./db_slack_bot_ci/':'./db_slack_bot_a/'),
-  debug: true
-};
+/**
+ * Initialize DB
+ */
+let db;
+const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hal9001';
+const poolSize = process.env.POOL_SIZE || 25;
 
-const onInstallationCallback = function onInstallationCallbackFun(bot, installer) {
-  if (installer) {
-    bot.startPrivateConversation({user: installer}, function (err, convo) {
-      if (err) {
-        console.log(err);
-      } else {
-        convo.say('I am a bot that has just joined your team');
-        convo.say('You must now /invite me to a channel so that I can be of use!');
-      }
-    });
-  }
-};
+mongoose.Promise = global.Promise;
+mongoose.connect(mongoURI, { poolSize: poolSize, useNewUrlParser: true })
+  .catch((err) => {
+    console.error(`Error in connecting to DB: ${err}`);
+  });
 
-const SlackBotInstance = new SlackBot(slackBotConfig, process.env.CLIENT_ID, process.env.CLIENT_SECRET,
-  process.env.SLACK_PORT, ['bot'], onInstallationCallback);
-
-const app = express();
+db = mongoose.connection;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 /**
  * Setup View Engine
  */
+const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -68,8 +73,30 @@ app.use(function(req, res, next) {
 });
 
 /**
- * Add bot triggers
+ * Setup Bot
  */
+const botkitMongoStorage = require('botkit-storage-mongo')({ mongoUri: mongoURI });
+const slackBotConfig = {
+  storage: botkitMongoStorage,
+  debug: true
+};
+
+const onInstallationCallback = function onInstallationCallbackFun(bot, installer) {
+  if (installer) {
+    bot.startPrivateConversation({user: installer}, function (err, convo) {
+      if (err) {
+        console.log(err);
+      } else {
+        convo.say('I am a bot that has just joined your team');
+        convo.say('You must now /invite me to a channel so that I can be of use!');
+      }
+    });
+  }
+};
+
+const SlackBotInstance = new SlackBot(slackBotConfig, process.env.CLIENT_ID, process.env.CLIENT_SECRET,
+  process.env.SLACK_PORT, ['bot'], onInstallationCallback);
+
 SlackBotInstance.defineNewListener('milestones', 'direct_message,direct_mention,mention', function (bot, message) {
   console.log(message);
   bot.startConversation(message, function(err, convo){
@@ -138,24 +165,6 @@ SlackBotInstance.defineNewListener('milestones', 'direct_message,direct_mention,
         }
       }
     ]);
-  });
-});
-
-SlackBotInstance.defineNewListener('secret', 'direct_message', function (bot, message) {
-  bot.api.im.open({
-    user: 'U0G17CVCZ'
-  }, (err, res) => {
-    if (err) {
-      bot.botkit.log('Failed to open IM with user', err)
-    }
-    console.log(res);
-    bot.startConversation({
-      user: 'U0G17CVCZ',
-      channel: res.channel.id,
-      text: 'WOWZA... 1....2'
-    }, (err, convo) => {
-      convo.say('/giphy panda')
-    });
   });
 });
 

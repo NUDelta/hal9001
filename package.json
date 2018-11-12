@@ -15,13 +15,14 @@
   ],
   "scripts": {
     "start": "node ./bin/www",
-    "dev": "concurrently \"nodemon -r dotenv/config ./bin/www\" \"lt --port 3001 --subdomain hal9001tester\"",
+    "dev": "concurrently \"nodemon -r dotenv/config ./bin/www\" \"lt --port 3001 --subdomain hal9001tester\" \"mongod\"",
     "test": "mocha"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.3",
     "botkit": "^0.6.20",
+    "botkit-storage-mongo": "^1.0.7",
     "cookie-parser": "~1.4.3",
     "debug": "~4.1.0",
     "ejs": "~2.6.1",
