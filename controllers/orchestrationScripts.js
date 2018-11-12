@@ -18,6 +18,7 @@ const availableFeedback = [
 ];
 
 const availableEscalationProtocols = [
+  'prompt student schedule meeting with SIG head',
   'prompt student to schedule meeting with faculty'
 ];
 
