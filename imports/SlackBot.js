@@ -1,28 +1,38 @@
 const BotKit = require('botkit');
 
+let slackBotInstance = null;
+
 /**
  * SlackBot class wrapper around BotKit for easy extensibility.
  */
 class SlackBot {
   constructor(config, clientId, clientSecret, port, scopes=['bot'], onInstallationCallback) {
-    // setup controller for bot
-    this.controller = BotKit.slackbot(config).configureSlackApp(
-      {
-        clientId: clientId,
-        clientSecret: clientSecret,
-        scopes: scopes
-      }
-    );
+    // check if already initialized
+    if(!slackBotInstance) {
+      slackBotInstance = this;
 
-    // setup webhooks
-    this._setupWebServer(port);
+      // setup controller for bot
+      this.controller = BotKit.slackbot(config).configureSlackApp(
+        {
+          clientId: clientId,
+          clientSecret: clientSecret,
+          scopes: scopes
+        }
+      );
 
-    // track bots
-    this._bots = {};
+      // setup webhooks
+      this._setupWebServer(port);
 
-    // create bots if not created, and connect to all of them
-    this._createBot(this._bots, onInstallationCallback);
-    this._connectAllBots(this._bots);
+      // track bots
+      this._bots = {};
+
+      // create bots if not created, and connect to all of them
+      this._createBot(this._bots, onInstallationCallback);
+      this._connectAllBots(this._bots);
+    }
+
+    // return singleton instance
+    return slackBotInstance;
   }
 
   _setupWebServer(port) {
@@ -89,6 +99,36 @@ class SlackBot {
 
   defineNewListener(targetText, listeningMethods, actionCallback) {
     this.controller.hears(targetText, listeningMethods, actionCallback);
+  }
+
+  sendPrivateMessageToUser(teamName, userId, message) {
+    // get bot to use to send message
+    this.controller.storage.teams.all((err, all_team_data) => {
+      let teamBotToken = '';
+      for (let team of all_team_data) {
+        if (team.name.toLowerCase().trim() === teamName.toLowerCase().trim()) {
+          teamBotToken = team.bot.token;
+          break;
+        }
+      }
+
+      let targetBot = this._bots[teamBotToken];
+
+      // send message using bot to user
+      targetBot.api.im.open({
+        user: userId
+      }, (err, apiRes) => {
+        if (!err) {
+          targetBot.startConversation({
+            user: userId,
+            channel: apiRes.channel.id,
+            text: ''
+          }, (err, convo) => {
+            convo.say(message);
+          });
+        }
+      });
+    });
   }
 }
 

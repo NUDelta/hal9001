@@ -4,11 +4,36 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
+const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
+/**
+ * Setup Bot
+ */
 const SlackBot = require('./imports/SlackBot');
+
+const slackBotConfig = {
+  json_file_store: ((process.env.TOKEN)?'./db_slack_bot_ci/':'./db_slack_bot_a/'),
+  debug: true
+};
+
+const onInstallationCallback = function onInstallationCallbackFun(bot, installer) {
+  if (installer) {
+    bot.startPrivateConversation({user: installer}, function (err, convo) {
+      if (err) {
+        console.log(err);
+      } else {
+        convo.say('I am a bot that has just joined your team');
+        convo.say('You must now /invite me to a channel so that I can be of use!');
+      }
+    });
+  }
+};
+
+const SlackBotInstance = new SlackBot(slackBotConfig, process.env.CLIENT_ID, process.env.CLIENT_SECRET,
+  process.env.SLACK_PORT, ['bot'], onInstallationCallback);
 
 const app = express();
 
@@ -19,8 +44,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(sassMiddleware({
   src: path.join(__dirname, 'public'),
@@ -43,29 +68,10 @@ app.use(function(req, res, next) {
 });
 
 /**
- * Setup Bot
+ * Add bot triggers
  */
-const slackBotConfig = {
-  json_file_store: ((process.env.TOKEN)?'./db_slack_bot_ci/':'./db_slack_bot_a/')
-};
-
-const onInstallationCallback = function onInstallationCallbackFun(bot, installer) {
-  if (installer) {
-    bot.startPrivateConversation({user: installer}, function (err, convo) {
-      if (err) {
-        console.log(err);
-      } else {
-        convo.say('I am a bot that has just joined your team');
-        convo.say('You must now /invite me to a channel so that I can be of use!');
-      }
-    });
-  }
-};
-
-const SlackBotInstance = new SlackBot(slackBotConfig, process.env.CLIENT_ID, process.env.CLIENT_SECRET,
-                                      process.env.SLACK_PORT, ['bot'], onInstallationCallback);
-
-SlackBotInstance.defineNewListener('milestones', 'direct_message', function (bot, message) {
+SlackBotInstance.defineNewListener('milestones', 'direct_message,direct_mention,mention', function (bot, message) {
+  console.log(message);
   bot.startConversation(message, function(err, convo){
     convo.say(`I am fetching your milestones for this sprint, ${ bot.config.bot.user_id }`);
     convo.ask({
@@ -132,6 +138,24 @@ SlackBotInstance.defineNewListener('milestones', 'direct_message', function (bot
         }
       }
     ]);
+  });
+});
+
+SlackBotInstance.defineNewListener('secret', 'direct_message', function (bot, message) {
+  bot.api.im.open({
+    user: 'U0G17CVCZ'
+  }, (err, res) => {
+    if (err) {
+      bot.botkit.log('Failed to open IM with user', err)
+    }
+    console.log(res);
+    bot.startConversation({
+      user: 'U0G17CVCZ',
+      channel: res.channel.id,
+      text: 'WOWZA... 1....2'
+    }, (err, convo) => {
+      convo.say('/giphy panda')
+    });
   });
 });
 
