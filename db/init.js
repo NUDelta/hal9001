@@ -4,6 +4,7 @@ const Person = require('./models/People');
 const SIG = require('./models/SIGs');
 const Sprint = require('./models/Sprints');
 const Project = require('./models/Projects');
+const OrchestrationScripts = require('./models/OrchestrationScripts');
 const Issue = require('./models/Issues');
 
 const peopleFixtures = require('./fixtures/people');
@@ -124,6 +125,7 @@ const clearCollections = function clearMongoCollections() {
     SIG.find({}).remove(),
     Sprint.find({}).remove(),
     Project.find({}).remove(),
+    OrchestrationScripts.find({}).remove(),
     Issue.find({}).remove()
   ]);
 };

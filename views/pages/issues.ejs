@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<%- include ../layout/head.ejs %>
+<body>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <h1>Create an Issue</h1>
+
+        <div id="sign-in">
+            <form class="form-goal" id="goal-form" action="/issues/create" title="" method="post">
+                <!-- Name -->
+                <label for="name">Enter a name for this issue</label>
+                <input id="name" type="text" name="name_field" class="form-control" value="" required>
+                <br>
+
+                <!-- Conditions -->
+                <label for="condition">What condition has been triggered?</label>
+                <select id="condition" name="condition_field" class="form-control">
+                    <%
+                    for ( var i = 0; i < conditions.length; i++ ) {
+                        var selected = "";
+                    %><option value="<%=conditions[i] %>" <%=selected %>><%=conditions[i] %></option><%
+                    }
+                    %>
+                </select>
+                <br>
+
+                <!-- Projects -->
+                <label>What project does this issue apply to?</label> <br>
+                <select id="project" name="project_field" class="form-control">
+                    <%
+                    for ( var i = 0; i < projects.length; i++ ) {
+                        var selected = "";
+                    %><option value="<%=projects[i] %>" <%=selected %>><%=projects[i] %></option><%
+                    }
+                    %>
+                </select>
+                <br>
+
+                <!-- Submit -->
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value="Send">Create Issue</button>
+
+                <!-- Success Message -->
+                <%if (saved) { %>
+                    <br>
+                    <span class="" id="signin-error">Issue successfully created.</span>
+                <% } %>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

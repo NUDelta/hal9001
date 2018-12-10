@@ -6,7 +6,7 @@ const monitor = require('./monitor');
 
 const createIssue = function createNewIssue(issueName, projectName, conditionMet) {
   // get relevant project and orchestration script triggered
-  Promise.all([
+  return Promise.all([
     OS.findOne({ target_projects: projectName, condition: conditionMet }),
     Projects.findOne({ name: projectName})
   ])

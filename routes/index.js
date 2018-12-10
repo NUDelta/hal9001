@@ -46,7 +46,8 @@ router.post('/os/create', function (req, res, next) {
     })
     .catch((err) => {
       console.error(`error in creating orchestration script: ${ err }`);
-    })
+    });
 });
+
 
 module.exports = router;
