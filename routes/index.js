@@ -1,52 +1,40 @@
 const _ = require('lodash');
 const express = require('express');
 const router = express.Router();
-const os = require('../controllers/orchestrationScripts');
+const SprintLog = require('../imports/SprintLog');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('pages/index', { title: 'Express' });
-});
-
-router.get('/os', function (req, res, next) {
-  os.getCurrentProjects()
-    .then((projects) => {
-      // get names of projects so that frontend can render them
-      let projectList = [];
-      _.forEach(projects, project => {
-        projectList.push(project.name);
-      });
-
-      // render simple orchestration script page
-      res.render('pages/os', {
-        conditions: os.availableConditions,
-        feedback: os.availableFeedback,
-        escalation: os.availableEscalationProtocols,
-        projects: projectList,
-        saved: req.query.saved === 'true'
-      });
+router.get('/', async function(req, res, next) {
+  let sprintLogInstance = new SprintLog('1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc');
+  sprintLogInstance.authorizeWithGoogle()
+    .then((successfulAuth) => {
+      return sprintLogInstance.getInfoAndWorksheets();
     })
-});
+    .then((spreadSheetInfo) => {
+      // find sheet for sprint 5
+      let targetSheet;
+      _.forEach(spreadSheetInfo.worksheets, currSheet => {
+        if (currSheet.title.includes('Sprint 5')) {
+          targetSheet = currSheet;
+          return false;
+        }
+      });
 
-router.post('/os/create', function (req, res, next) {
-  let formBody = req.body;
-
-  // isolate projects
-  let projects = [];
-  _.forEach(_.filter(Object.keys(formBody), obj => obj.includes('project')), projectKey => {
-    projects.push(formBody[projectKey]);
-  });
-
-  // save to database
-
-  os.createOrchestrationScript(formBody.name_field, formBody.goal_field, formBody.condition_field,
-    formBody.feedback_field, formBody.escalation_field, projects)
-    .then(() => {
-      res.redirect('/os/?saved=' + encodeURIComponent('true'));
+      // get points committed and hours spent
+      if (targetSheet !== undefined) {
+        return sprintLogInstance.getRowsForSheet(targetSheet.id, {});
+      }
+    })
+    .then(rows => {
+      _.forEach(rows, row => {
+        console.log(`Person: ${ row.team } | Points Available: ${ row.pointsavailable } | Points Committed: ${ row.pointscommitted } | Hours Spent: ${ row.hoursspent }`);
+      })
     })
     .catch((err) => {
-      console.error(`error in creating orchestration script: ${ err }`);
+      console.log(`error in auth and getting data: ${ err }`);
     });
+
+  res.render('pages/index', { title: 'HAL 9001' });
 });
 
 

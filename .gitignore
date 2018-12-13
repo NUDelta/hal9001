@@ -326,3 +326,6 @@ $RECYCLE.BIN/
 
 
 # End of https://www.gitignore.io/api/vim,osx,node,sass,linux,emacs,windows,webstorm,sublimetext
+
+# Custom
+google-credentials.json

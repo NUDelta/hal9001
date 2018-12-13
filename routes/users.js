@@ -20,7 +20,7 @@ router.post('/messageUser', function(req, res, next) {
 router.get('/slackUsers', function (req, res, next) {
   let bot = new SlackBot();
   bot.getAllUsersForTeam('DTR');
-  res.send('cat');
+  res.send('success')
 });
 
 module.exports = router;
