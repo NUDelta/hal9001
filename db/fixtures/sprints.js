@@ -6,7 +6,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 8, 27, 0, 0, 0),
     sprint_end: new Date(2018, 9, 4, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1gMaYTYFAisy_pUw2zZhSmPgD5dbfIQZEL5clRVGzirs/edit#gid=1083093502'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1nUTCpY9mcjdr-tX87TGP3iFkvoJMgDCtbiA0LP6DVuA/edit#gid=283878840'
   },
   {
     project_name: 'Orchestration Technologies',
@@ -15,7 +15,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 9, 4, 0, 0, 0),
     sprint_end: new Date(2018, 9, 18, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1gMaYTYFAisy_pUw2zZhSmPgD5dbfIQZEL5clRVGzirs/edit#gid=1041047164'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1nUTCpY9mcjdr-tX87TGP3iFkvoJMgDCtbiA0LP6DVuA/edit#gid=283878840'
   },
   {
     project_name: 'Orchestration Technologies',
@@ -24,7 +24,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 9, 18, 0, 0, 0),
     sprint_end: new Date(2018, 10, 1, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1gMaYTYFAisy_pUw2zZhSmPgD5dbfIQZEL5clRVGzirs/edit#gid=241156741'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1nUTCpY9mcjdr-tX87TGP3iFkvoJMgDCtbiA0LP6DVuA/edit#gid=283878840'
   },
   {
     project_name: 'Orchestration Technologies',
@@ -33,7 +33,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 10, 1, 0, 0, 0),
     sprint_end: new Date(2018, 10, 15, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1gMaYTYFAisy_pUw2zZhSmPgD5dbfIQZEL5clRVGzirs/edit#gid=73073972'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1nUTCpY9mcjdr-tX87TGP3iFkvoJMgDCtbiA0LP6DVuA/edit#gid=283878840'
   },
   {
     project_name: 'Orchestration Technologies',
@@ -42,7 +42,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 10, 15, 0, 0, 0),
     sprint_end: new Date(2018, 10, 29, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1gMaYTYFAisy_pUw2zZhSmPgD5dbfIQZEL5clRVGzirs/edit#gid=1585713447'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1nUTCpY9mcjdr-tX87TGP3iFkvoJMgDCtbiA0LP6DVuA/edit#gid=283878840'
   },
   {
     project_name: 'Lake',
@@ -51,7 +51,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 8, 27, 0, 0, 0),
     sprint_end: new Date(2018, 9, 4, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1X4V2ero6v87i1dLpsgogoPljoIo2CVGib0a0IVxAhJk/edit#gid=1083093502'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc/edit#gid=776094986'
   },
   {
     project_name: 'Lake',
@@ -60,7 +60,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 9, 4, 0, 0, 0),
     sprint_end: new Date(2018, 9, 18, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1X4V2ero6v87i1dLpsgogoPljoIo2CVGib0a0IVxAhJk/edit#gid=1041047164'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc/edit#gid=776094986'
   },
   {
     project_name: 'Lake',
@@ -69,7 +69,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 9, 18, 0, 0, 0),
     sprint_end: new Date(2018, 10, 1, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1X4V2ero6v87i1dLpsgogoPljoIo2CVGib0a0IVxAhJk/edit#gid=241156741'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc/edit#gid=776094986'
   },
   {
     project_name: 'Lake',
@@ -78,7 +78,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 10, 1, 0, 0, 0),
     sprint_end: new Date(2018, 10, 15, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1X4V2ero6v87i1dLpsgogoPljoIo2CVGib0a0IVxAhJk/edit#gid=73073972'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc/edit#gid=776094986'
   },
   {
     project_name: 'Lake',
@@ -87,7 +87,7 @@ module.exports = [
     tasks: [],
     sprint_start: new Date(2018, 10, 15, 0, 0, 0),
     sprint_end: new Date(2018, 10, 29, 0, 0, 0),
-    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1X4V2ero6v87i1dLpsgogoPljoIo2CVGib0a0IVxAhJk/edit#gid=1585713447'
+    sprint_sheet: 'https://docs.google.com/spreadsheets/d/1R2oDC1cTVEILiPNL5kXpiUy9qjxVeR-KnhTFplsmQLc/edit#gid=776094986'
   },
   {
     project_name: 'Libero',
