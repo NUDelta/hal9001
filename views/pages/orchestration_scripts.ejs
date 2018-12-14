@@ -20,23 +20,26 @@
 
                 <!-- Conditions -->
                 <label for="condition">What condition should trigger this script?</label>
-                <select id="condition" name="condition_field" class="form-control">
-                    <%
-                    for ( var i = 0; i < conditions.length; i++ ) {
-                        var selected = "";
-                    %><option value="<%=conditions[i] %>" <%=selected %>><%=conditions[i] %></option><%
-                    }
-                    %>
-                </select>
+                <br>
+                <span class="small">Available detectors for Sprint Log: pointsavailable, pointscommitted, hoursspent</span>
+                <br>
+                <span class="small">Example (points committed are more than 10% higher than points available): pointscommitted >= pointsavailable * 1.1</span>
+                <input id="condition" type="text" name="condition_field" class="form-control" value="" required>
                 <br>
 
                 <!-- Actionable Feedback -->
-                <label for="feedback">What actionable feedback should be presented to the project team when this script is triggered?</label>
-                <select id="feedback" name="feedback_field" class="form-control">
+                <label for="feedback">What actionable feedback should be presented to the student when this script is triggered?</label>
+                <textarea class="form-control rounded-0" name="feedback_field" required></textarea>
+                <!--<input id="feedback" type="text" name="feedback_field" class="form-control" value="" required>-->
+                <br>
+
+                <!-- Actionable Feedback Outlet -->
+                <label for="outlet">Who should be sent the actionable feedback?</label>
+                <select id="outlet" name="outlet_field" class="form-control">
                     <%
-                    for ( var i = 0; i < feedback.length; i++ ) {
+                    for ( var i = 0; i < outlets.length; i++ ) {
                         var selected = "";
-                    %><option value="<%=feedback[i] %>" <%=selected %>><%=feedback[i] %></option><%
+                    %><option value="<%=outlets[i] %>" <%=selected %>><%=outlets[i] %></option><%
                     }
                     %>
                 </select>

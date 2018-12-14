@@ -14,8 +14,7 @@ router.get('/', function (req, res, next) {
 
       // render simple orchestration script page
       res.render('pages/orchestration_scripts', {
-        conditions: os.availableConditions,
-        feedback: os.availableFeedback,
+        outlets: ['student', 'mentor'],
         escalation: os.availableEscalationProtocols,
         projects: projectList,
         saved: req.query.saved === 'true'
@@ -23,7 +22,7 @@ router.get('/', function (req, res, next) {
     })
 });
 
-router.post('/os/create', function (req, res, next) {
+router.post('/create', function (req, res, next) {
   let formBody = req.body;
 
   // isolate projects
@@ -33,9 +32,16 @@ router.post('/os/create', function (req, res, next) {
   });
 
   // save to database
+  let name = formBody.name_field;
+  let goal = formBody.goal_field;
+  let condition = formBody.condition_field;
+  let feedback = {
+    message: formBody.feedback_field,
+    outlet: formBody.outlet_field
+  };
+  let escalation = formBody.escalation_field;
 
-  os.createOrchestrationScript(formBody.name_field, formBody.goal_field, formBody.condition_field,
-    formBody.feedback_field, formBody.escalation_field, projects)
+  os.createOrchestrationScript(name, goal, condition, feedback, escalation, projects)
     .then(() => {
       res.redirect('/os/?saved=' + encodeURIComponent('true'));
     })
