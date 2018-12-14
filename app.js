@@ -14,6 +14,8 @@ const createError = require('http-errors');
 const mongoose = require('mongoose');
 const initDb  = require('./db/init');
 
+const schedule = require('node-schedule');
+const monitor = require('./controllers/monitor');
 
 /**
  * Route imports
@@ -197,3 +199,12 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+// begin monitoring for changes in data
+schedule.scheduleJob('*/5 * * * * *', () => {
+  console.log(`Running monitor loop`);
+  monitor.runMonitorLoop()
+    .catch(err => {
+      console.error(`Error in running monitor loop: ${ err }`);
+    })
+});

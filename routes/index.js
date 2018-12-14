@@ -12,20 +12,20 @@ router.get('/', async function(req, res, next) {
     .then(() => {
       return os.createOrchestrationScript('testing script 2', 'prevent grad students from going way over points', 'hoursspent >= 1.50 * pointsavailable', { message: 'One of your grad students ([student]) is way over points. Maybe you should check in with them and help them slice better.', outlet: 'mentor' }, 'sighead', ['Orchestration Technologies', 'Affinder', 'Supply Management']);
     })
-    .then(() => {
-      return monitor.updateData();
-    })
-    .then(data => {
-      return monitor.checkIfConditionsMet(data);
-    })
-    .then(triggeredScriptObjs => {
-      return monitor.createIssues(triggeredScriptObjs);
-    })
-    .then(createdIssues => {
-      _.forEach(createdIssues, currIssue => {
-        monitor.triggerOrchestrationScript(currIssue._id);
-      });
-    })
+    // .then(() => {
+    //   return monitor.updateData();
+    // })
+    // .then(data => {
+    //   return monitor.checkIfConditionsMet(data);
+    // })
+    // .then(triggeredScriptObjs => {
+    //   return monitor.createIssues(triggeredScriptObjs);
+    // })
+    // .then(createdIssues => {
+    //   _.forEach(createdIssues, currIssue => {
+    //     monitor.triggerOrchestrationScript(currIssue._id);
+    //   });
+    // })
     .catch((err) => {
       console.error(`error in creating orchestration script: ${ err }`);
     });

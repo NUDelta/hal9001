@@ -12,8 +12,6 @@ const OS = require('../db/models/OrchestrationScripts');
 
 const issueController = require('../controllers/issues');
 
-const resources = require('./resources');
-
 const updateData = function updateDataFromStudio() {
   // get all sprint logs for most recent sprint (hardcoded to 5 currently and only for Lake and Orchestration)
   return Sprints.find({'sprint_number': 4, 'project_name': {$in: ['Orchestration Technologies', 'Lake']}})
@@ -157,24 +155,66 @@ const checkIfConditionsMet = function checkIfOrchestrationConditionIsMet(studioD
     })
 };
 
-const createIssues = function createIssuesFromTriggeredOrchestrationScripts(triggeredScriptObjs) {
-  let issuesToCreate = [];
-  _.forEach(triggeredScriptObjs, triggeredScriptObj => {
-    // parse out needed data
-    let person = triggeredScriptObj.person;
-    let project = triggeredScriptObj.project;
-    let triggeredOSName = triggeredScriptObj.triggeredScript.name;
-    let triggeredOSCondition = triggeredScriptObj.triggeredScript.condition;
+const createIssueFromTriggeredOS = function createIssueFromTriggeredOS(triggeredScript) {
+  // parse out needed data
+  let person = triggeredScript.person;
+  let project = triggeredScript.project;
+  let triggeredOSName = triggeredScript.triggeredScript.name;
+  let triggeredOSCondition = triggeredScript.triggeredScript.condition;
 
-    // create an issue name based on triggered script, person, project, and date
-    let issueName = `${ triggeredOSName } for ${ person } on project ${ project } at ${ Date.now() }`;
+  // create an issue name based on triggered script, person, project, and date
+  let issueName = `${ triggeredOSName } for ${ person } on project ${ project }`;
 
-    // add a create issue promise to array
-    issuesToCreate.push(issueController.createIssue(issueName, person, project, triggeredOSCondition));
-  });
+  // TODO: think about issue scope (during each sprint, continuously, etc.)
+  // check if issue already exists
+  return Issues.findOne({ name: issueName})
+    .then(maybeIssue => {
+      if (maybeIssue === null) {
+        return issueController.createIssue(issueName, person, project, triggeredOSCondition);
+      } else {
+        return undefined;
+      }
+    });
 
-  // execute promises
-  return Promise.all(issuesToCreate)
+  // _.forEach(triggeredScriptObjs, triggeredScriptObj => {
+  //   // parse out needed data
+  //   let person = triggeredScriptObj.person;
+  //   let project = triggeredScriptObj.project;
+  //   let triggeredOSName = triggeredScriptObj.triggeredScript.name;
+  //   let triggeredOSCondition = triggeredScriptObj.triggeredScript.condition;
+  //
+  //   // create an issue name based on triggered script, person, project, and date
+  //   let issueName = `${ triggeredOSName } for ${ person } on project ${ project }`;
+  //
+  //
+  //   issuesToCheckFor.push({
+  //     issueName: issueName,
+  //     person: person,
+  //     project: project,
+  //     triggeredOSCondition: triggeredOSCondition,
+  //     promise: Issues.findOne({ name: issueName})
+  //   });
+  // });
+  //
+  // return Promise.all(issuesToCheckFor)
+  //   .then(issuesFound => {
+  //     _.forEach(issuesFound, async currIssue => {
+  //       // check if issue already exists
+  //       let maybeIssueExists = await currIssue.promise;
+  //       if (maybeIssueExists === null) {
+  //         let issueName = currIssue.issueName;
+  //         let person = currIssue.person;
+  //         let project = currIssue.project;
+  //         let triggeredOSCondition = currIssue.triggeredOSCondition;
+  //
+  //         // add a create issue promise to array
+  //         issuesToCreate.push(issueController.createIssue(issueName, person, project, triggeredOSCondition));
+  //       }
+  //     });
+  //
+  //     // execute promises
+  //     return Promise.all(issuesToCreate)
+  //   });
 };
 
 const triggerOrchestrationScript = function triggerOrchestrationScript(issueId) {
@@ -224,9 +264,30 @@ const runEscalationStrategy = function runEscalationStrategyBasedOnScript(escala
   }
 };
 
+const runMonitorLoop = function monitorForChangesAndTriggerScripts() {
+  return updateData()
+    .then(data => {
+      return checkIfConditionsMet(data);
+    })
+    .then(triggeredScriptObjs => {
+      // create an issue for each triggered OS
+      _.forEach(triggeredScriptObjs, currTriggeredScriptObj => {
+        createIssueFromTriggeredOS(currTriggeredScriptObj)
+          .then(currIssue => {
+            if (currIssue !== undefined) {
+              triggerOrchestrationScript(currIssue._id);
+            }
+          })
+          .catch(err => {
+            console.error(`Error in creating issue or triggering action: ${ err }`);
+          })
+      })
+    })
+    .catch(err => {
+      console.error(`Error in updating data or checking conditions: ${ err }`);
+    });
+};
+
 module.exports = {
-  triggerOrchestrationScript: triggerOrchestrationScript,
-  updateData: updateData,
-  checkIfConditionsMet: checkIfConditionsMet,
-  createIssues: createIssues
+  runMonitorLoop: runMonitorLoop
 };
