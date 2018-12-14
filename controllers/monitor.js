@@ -10,6 +10,8 @@ const Sprints = require('../db/models/Sprints');
 const Projects = require('../db/models/Projects');
 const OS = require('../db/models/OrchestrationScripts');
 
+const issueController = require('../controllers/issues');
+
 const resources = require('./resources');
 
 const updateData = function updateDataFromStudio() {
@@ -112,8 +114,6 @@ const updateData = function updateDataFromStudio() {
 
 
 const checkIfConditionsMet = function checkIfOrchestrationConditionIsMet(studioData) {
-  console.log(studioData);
-
   // get conditions for all orchestration scripts and see if any have been triggered
   return OS.find()
     .then((scripts) => {
@@ -157,56 +157,50 @@ const checkIfConditionsMet = function checkIfOrchestrationConditionIsMet(studioD
     })
 };
 
+const createIssues = function createIssuesFromTriggeredOrchestrationScripts(triggeredScriptObjs) {
+  let issuesToCreate = [];
+  _.forEach(triggeredScriptObjs, triggeredScriptObj => {
+    // parse out needed data
+    let person = triggeredScriptObj.person;
+    let project = triggeredScriptObj.project;
+    let triggeredOSName = triggeredScriptObj.triggeredScript.name;
+    let triggeredOSCondition = triggeredScriptObj.triggeredScript.condition;
 
+    // create an issue name based on triggered script, person, project, and date
+    let issueName = `${ triggeredOSName } for ${ person } on project ${ project } at ${ Date.now() }`;
+
+    // add a create issue promise to array
+    issuesToCreate.push(issueController.createIssue(issueName, person, project, triggeredOSCondition));
+  });
+
+  // execute promises
+  return Promise.all(issuesToCreate)
+};
 
 const triggerOrchestrationScript = function triggerOrchestrationScript(issueId) {
   // fetch issue with orchestration data
   Issues.findOne({'_id': issueId})
     .populate('os_triggered')
     .populate('project')
+    .populate('target')
     .exec()
-    .then((object) => {
-      presentActionableFeedback(object.project.students, object.project.sig,
-        object.os_triggered.name, object.name, object.project.name, object.os_triggered.actionable_feedback);
+    .then((issue) => {
+      presentActionableFeedback(issue.target, issue.project.sig, issue.os_triggered.actionable_feedback);
     });
 };
 
-const presentActionableFeedback = function presentActionableFeedbackBasedOnScript(students, sig, osName, issueName, projectName, feedback) {
+const presentActionableFeedback = function presentActionableFeedbackBasedOnScript(student, sig, feedback) {
   let bot = new SlackBot();
-  let target = 'student';
-  let feedbackMessage = '';
 
-  if (feedback === 'direct student to resource') {
-    if (osName.toLowerCase().includes('urg')) {
-      feedbackMessage = `Hey [person]! Looks like you're working on your URG. Take a look at the process guide before you start: ${resources['urg']}`;
-    } else if (osName.toLowerCase().includes('study design')) {
-      feedbackMessage = `Hey [person]! Looks like you're working on a study design. Take a look at the study design learning module before you start: ${resources['study design']}`;
-    }
-  } else if (feedback === 'prompt student schedule meeting with SIG head') {
-    feedbackMessage = `Hey [person]! Based on your current issue (${ issueName }), it might good to reach our and schedule a meeting with your SIG head.`;
-  } else if (feedback === 'prompt student to reflect on issue') {
-    feedbackMessage = `Hey [person]! Have you made progress on your issue (${ issueName })? Do you have any blockers to completing it?`;
-  } else if (feedback === 'remind mentor to discuss issue at SIG meeting') {
-    target = 'mentor';
-    feedbackMessage = `Hey [person]! Remember to discuss ${ projectName }'s issue during SIG.`;
-  }
+  // separate out feedback
+  let feedbackMessage = feedback.message;
+  let outlet = feedback.outlet;
 
-  // TODO: generalize to outlet
   // send message
-  if (target === 'student') {
-    People.find({ _id: students })
-      .then((studentObjs) => {
-        console.log(studentObjs);
-        _.forEach(studentObjs, studentObj => {
-          let feedbackMessageWithNames = feedbackMessage.replace('[person]', studentObj.first_name);
-          bot.sendPrivateMessageToUser(studentObj.slack_team_name,
-            studentObj.slack_id, feedbackMessageWithNames);
-        });
-      })
-      .catch((err) => {
-        console.error(`error in sending feedback to students: ${ err }`);
-      })
-  } else {
+  if (outlet === 'student') {
+    let feedbackMessageWithNames = `Hey ${ student.first_name }! ${ feedbackMessage }`;
+    bot.sendPrivateMessageToUser(student.slack_team_name, student.slack_id, feedbackMessageWithNames);
+  } else if (outlet === 'mentor') {
     // get sig head and send them a message
     SIG.findOne({_id: sig })
       .then(obj => {
@@ -214,11 +208,11 @@ const presentActionableFeedback = function presentActionableFeedbackBasedOnScrip
           return People.findOne({ full_name: obj.sig_head });
         }
       })
-      .then(obj => {
-        if (obj) {
-          feedbackMessage = feedbackMessage.replace('[person]', obj.first_name);
-          bot.sendPrivateMessageToUser(obj.slack_team_name,
-            obj.slack_id, feedbackMessage);
+      .then(sigHead => {
+        if (sigHead) {
+          feedbackMessage = feedbackMessage.replace('[student]', student.first_name );
+          feedbackMessage = `Hey ${ sigHead.first_name }! ${ feedbackMessage }`;
+          bot.sendPrivateMessageToUser(sigHead.slack_team_name, sigHead.slack_id, feedbackMessage);
         }
       })
   }
@@ -233,5 +227,6 @@ const runEscalationStrategy = function runEscalationStrategyBasedOnScript(escala
 module.exports = {
   triggerOrchestrationScript: triggerOrchestrationScript,
   updateData: updateData,
-  checkIfConditionsMet: checkIfConditionsMet
+  checkIfConditionsMet: checkIfConditionsMet,
+  createIssues: createIssues
 };

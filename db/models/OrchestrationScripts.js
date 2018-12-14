@@ -6,7 +6,12 @@ let OrchestrationScriptSchema = new Schema({
   goal: String,
   condition: String,
   target_projects: [String],
-  actionable_feedback: String,
+  actionable_feedback: {
+    type: {
+      message: String,
+      outlet: String
+    }
+  },
   escalation_strategy: String,
   created_at: { type: Date, default: Date.now() },
   updated: { type: Date, default: Date.now() }

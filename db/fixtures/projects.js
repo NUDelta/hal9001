@@ -48,7 +48,7 @@ module.exports = [
     description: 'Affordances + Finder = Affinder.',
     students: ['Ryan Louie'],
     sig: {
-      name: 'Breaking Boundaries'
+      name: 'BBQ'
     },
     sprints: {
       project_name: 'Collective Experience API'

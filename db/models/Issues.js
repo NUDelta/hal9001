@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 let IssueSchema = new Schema({
   name: { type: String, required: true },
+  target: { type: mongoose.Schema.Types.ObjectId, ref: 'Person' },
   os_triggered: { type: mongoose.Schema.Types.ObjectId, ref: 'OrchestrationScript' },
   project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
   addressed: { type: Boolean, default: false },
