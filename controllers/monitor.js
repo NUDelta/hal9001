@@ -175,46 +175,6 @@ const createIssueFromTriggeredOS = function createIssueFromTriggeredOS(triggered
         return undefined;
       }
     });
-
-  // _.forEach(triggeredScriptObjs, triggeredScriptObj => {
-  //   // parse out needed data
-  //   let person = triggeredScriptObj.person;
-  //   let project = triggeredScriptObj.project;
-  //   let triggeredOSName = triggeredScriptObj.triggeredScript.name;
-  //   let triggeredOSCondition = triggeredScriptObj.triggeredScript.condition;
-  //
-  //   // create an issue name based on triggered script, person, project, and date
-  //   let issueName = `${ triggeredOSName } for ${ person } on project ${ project }`;
-  //
-  //
-  //   issuesToCheckFor.push({
-  //     issueName: issueName,
-  //     person: person,
-  //     project: project,
-  //     triggeredOSCondition: triggeredOSCondition,
-  //     promise: Issues.findOne({ name: issueName})
-  //   });
-  // });
-  //
-  // return Promise.all(issuesToCheckFor)
-  //   .then(issuesFound => {
-  //     _.forEach(issuesFound, async currIssue => {
-  //       // check if issue already exists
-  //       let maybeIssueExists = await currIssue.promise;
-  //       if (maybeIssueExists === null) {
-  //         let issueName = currIssue.issueName;
-  //         let person = currIssue.person;
-  //         let project = currIssue.project;
-  //         let triggeredOSCondition = currIssue.triggeredOSCondition;
-  //
-  //         // add a create issue promise to array
-  //         issuesToCreate.push(issueController.createIssue(issueName, person, project, triggeredOSCondition));
-  //       }
-  //     });
-  //
-  //     // execute promises
-  //     return Promise.all(issuesToCreate)
-  //   });
 };
 
 const triggerOrchestrationScript = function triggerOrchestrationScript(issueId) {
