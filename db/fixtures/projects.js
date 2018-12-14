@@ -1,5 +1,16 @@
 module.exports = [
   {
+    name: 'Orchestration Technologies',
+    description: 'Mixed-initiative orchestration technologies for ARS.',
+    students: ['Kapil Garg'],
+    sig: {
+      name: 'BBQ'
+    },
+    sprints: {
+      project_name: 'Orchestration Technologies'
+    }
+  },
+  {
     name: 'Libero',
     description: 'OTG package and burrito delivery.',
     students: ['Maggie Lou'],
@@ -13,7 +24,7 @@ module.exports = [
   {
     name: 'Lake',
     description: 'Mixed-fidelity remote prototyping.',
-    students: ['Andrew Finke'],
+    students: ['Andrew Finke', 'Meg Grasse'],
     sig: {
       name: 'Breaking Boundaries'
     },
@@ -48,7 +59,7 @@ module.exports = [
     description: 'Community-adjustable task completion policies.',
     students: ['Yongsung Kim'],
     sig: {
-      name: 'On-the-Go Crowdsourcing'
+      name: 'BBQ'
     },
     sprints: {
       project_name: 'Collective Experience API'

@@ -105,6 +105,15 @@ module.exports = [
     role: 'undergraduate'
   },
   {
+    first_name: 'Meg',
+    last_name: 'Grasse',
+    slack_id: 'U0G17CVCZ',
+    slack_name: 'kapil',
+    slack_team_name: 'DTR',
+    slack_team_id: 'T0CEQEN0L',
+    role: 'undergraduate'
+  },
+  {
     first_name: 'Maggie',
     last_name: 'Lou',
     slack_id: 'U0G17CVCZ',

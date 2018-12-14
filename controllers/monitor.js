@@ -8,6 +8,7 @@ const People = require('../db/models/People');
 const SIG = require('../db/models/SIGs');
 const Sprints = require('../db/models/Sprints');
 const Projects = require('../db/models/Projects');
+const OS = require('../db/models/OrchestrationScripts');
 
 const resources = require('./resources');
 
@@ -50,27 +51,113 @@ const updateData = function updateDataFromStudio() {
           }));
       });
 
-      // get updated data for each sprint
-      return Promise.all(sprintPromiseArray)
+      // get updated data for each sprint and also get projects
+      return Promise.all([
+        Promise.all(sprintPromiseArray),
+        Projects.find()
+          .populate('students')
+          .populate('sprints')
+          .populate('SIG')
+      ]);
     })
     .then(data => {
-      let parsedData = [];
-      _.forEach(data, currSheet => {
-        let currRow = currSheet[0];
-        parsedData.push({
-          person: currRow.team,
-          pointsavailable: currRow.pointsavailable,
-          pointscommitted: currRow.pointscommitted,
-          hoursspent: currRow.hoursspent
+      // separate out list of sprints and list of projects
+      let [sprints, projects] = data;
+
+      // parse data from each sheet
+      let parsedSprintData = [];
+      _.forEach(sprints, currSheet => {
+        _.forEach(currSheet, currRow => {
+          parsedSprintData.push({
+            person: currRow.team,
+            data: {
+              pointsavailable: parseFloat(currRow.pointsavailable),
+              pointscommitted: parseFloat(currRow.pointscommitted),
+              hoursspent: parseFloat(currRow.hoursspent)
+            }
+          });
         });
       });
 
-      return parsedData;
+      // add project to parsed data
+      _.forEach(parsedSprintData, (dataInstance, index) => {
+        let targetFirstName = dataInstance.person;
+
+        // search for person in projects
+        _.forEach(projects, currProject => {
+          let currProjectName = currProject.name;
+          let projectFound = false;
+
+          _.forEach(currProject.students, currProjectStudent => {
+            if (currProjectStudent.first_name === targetFirstName) {
+              parsedSprintData[index].project = currProjectName;
+              projectFound = true;
+              return false;
+            }
+          });
+
+          if (projectFound) {
+            return false;
+          }
+        })
+      });
+
+      // fetch project and add that data
+      return parsedSprintData;
     })
     .catch(err => {
       console.error(`Error with finding sprints: ${ err }`);
     });
 };
+
+
+const checkIfConditionsMet = function checkIfOrchestrationConditionIsMet(studioData) {
+  console.log(studioData);
+
+  // get conditions for all orchestration scripts and see if any have been triggered
+  return OS.find()
+    .then((scripts) => {
+      let triggeredScripts = [];
+
+      // loop over each orchestration script and see which projects have triggered them
+      _.forEach(scripts, currScript => {
+        let currCondition = currScript.condition;
+        let targetProjects = currScript.target_projects;
+
+        // loop over studio data to find any that triggers the current orchestration script
+        _.forEach(studioData, dataObject => {
+          // check if current script applies to data object
+          if (dataObject.project !== undefined && targetProjects.includes(dataObject.project)) {
+            // check if script was triggered
+            let dataPieces = dataObject.data;
+
+            // replace each condition variable with variable value
+            let modifiedCondition = currCondition;
+            _.forEach(dataPieces, (dataValue, dataVarName) => {
+              modifiedCondition = modifiedCondition.replace(dataVarName, dataValue);
+            });
+
+            // evaluate condition
+            let evaluatedCondition = eval(modifiedCondition);
+            if (evaluatedCondition) {
+              triggeredScripts.push({
+                person: dataObject.person,
+                project: dataObject.project,
+                triggeredScript: currScript
+              });
+            }
+          }
+        });
+      });
+
+      return triggeredScripts;
+    })
+    .catch((err) => {
+      console.error(`Error with checking orchestration script conditions: ${ err }`);
+    })
+};
+
+
 
 const triggerOrchestrationScript = function triggerOrchestrationScript(issueId) {
   // fetch issue with orchestration data
@@ -104,6 +191,7 @@ const presentActionableFeedback = function presentActionableFeedbackBasedOnScrip
     feedbackMessage = `Hey [person]! Remember to discuss ${ projectName }'s issue during SIG.`;
   }
 
+  // TODO: generalize to outlet
   // send message
   if (target === 'student') {
     People.find({ _id: students })
@@ -144,5 +232,6 @@ const runEscalationStrategy = function runEscalationStrategyBasedOnScript(escala
 
 module.exports = {
   triggerOrchestrationScript: triggerOrchestrationScript,
-  updateData: updateData
+  updateData: updateData,
+  checkIfConditionsMet: checkIfConditionsMet
 };
